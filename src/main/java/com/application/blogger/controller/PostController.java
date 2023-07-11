@@ -1,5 +1,6 @@
 package com.application.blogger.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.application.blogger.dto.PostDto;
 import com.application.blogger.model.PostEntity;
 import com.application.blogger.response.ApiResponse;
 import com.application.blogger.response.PostResponse;
+import com.application.blogger.service.FileService;
 import com.application.blogger.service.PostService;
 import com.application.blogger.util.AppConstants;
+
+import lombok.Value;
 
 @RestController
 @RequestMapping("/api/post")
@@ -29,6 +34,12 @@ public class PostController {
 	
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private FileService fileServie;
+	
+	//@Value("${project.image}")
+	private String path;
 	
 	@PostMapping("/user/{userId}/category/{categoryId}/posts")
 	public ResponseEntity<PostDto> createPost(
@@ -88,6 +99,20 @@ public class PostController {
 		List<PostDto> searchPosts = this.postService.searchPost(keyword);
 		
 		return new ResponseEntity<>(searchPosts, HttpStatus.OK);
+	}
+	
+	@PostMapping("/image/upload/{id}")
+	public ResponseEntity<PostDto> uploadPostImage(
+			@RequestParam("image") MultipartFile image,
+			@PathVariable Integer id)throws IOException{
+		PostDto postDto = this.postService.getPostById(id);
+
+		String fileName = this.fileServie.uploadImage(path, image);
+		postDto.setImageName(fileName);
+		PostDto updatedPost = this.postService.updatePost(postDto, id);
+		
+		return new ResponseEntity<>(updatedPost, HttpStatus.OK);
+		
 	}
 	
 }
