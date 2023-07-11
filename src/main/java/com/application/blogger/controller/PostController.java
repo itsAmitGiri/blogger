@@ -1,15 +1,22 @@
 package com.application.blogger.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.application.blogger.dto.ApiResponse;
 import com.application.blogger.dto.PostDto;
 import com.application.blogger.model.PostEntity;
 import com.application.blogger.service.PostService;
@@ -36,7 +43,41 @@ public class PostController {
 		PostDto post = this.postService.updatePost(postDto,id);
 		return new ResponseEntity<>(post, HttpStatus.CREATED);
 	}
-
+	
+	@GetMapping("/user/{id}/posts")
+	public ResponseEntity<List<PostDto>> getPostsByUser(@PathVariable Integer id){
+		
+		List<PostDto> posts = this.postService.getAllPostsByUser(id);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
+		
+	}
+	
+	@GetMapping("/category/{id}/posts")
+	public ResponseEntity<List<PostDto>> getPostsByCategories(@PathVariable Integer id){
+		List<PostDto> posts = this.postService.getAllPostsByCategory(id);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
+	}
+	
+	@GetMapping("/post/{id}")
+	public ResponseEntity<PostDto> getPostById(@PathVariable Integer id){
+		PostDto postDto = this.postService.getPostById(id);
+		return new ResponseEntity<>(postDto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/posts")
+	public ResponseEntity<List<PostDto>> getPosts(
+			@RequestParam(value="pageNumber", defaultValue="0", required=false) Integer pageNumber,
+			@RequestParam(value="pageSize", defaultValue="2", required=false) Integer pageSize
+			){
+		List<PostDto> posts = this.postService.getAllPosts(pageNumber, pageSize);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<ApiResponse> deletePost(@PathVariable Integer id){
+		this.postService.deletePost(id);
+		return new ResponseEntity<>(new ApiResponse("Post has been deleted", true), HttpStatus.OK);
+	}
 }
 
 
