@@ -19,6 +19,7 @@ import com.application.blogger.model.UserEntity;
 import com.application.blogger.repository.CategoryRepo;
 import com.application.blogger.repository.PostRepo;
 import com.application.blogger.repository.UserRepo;
+import com.application.blogger.response.PostResponse;
 import com.application.blogger.service.PostService;
 
 @Service
@@ -89,7 +90,7 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDto> getAllPosts(Integer pageNumber, Integer pageSize) {
+	public PostResponse getAllPosts(Integer pageNumber, Integer pageSize) {
 		// TODO Auto-generated method stub
 		
 		
@@ -103,7 +104,15 @@ public class PostServiceImpl implements PostService {
 				.map((p)->this.modelMapper.map(p, PostDto.class))
 				.collect(Collectors.toList());
 		
-		return postDto;
+		PostResponse postResponse = new PostResponse();
+		postResponse.setContent(postDto);
+		postResponse.setPageNumber(pagePostEntity.getNumber());
+		postResponse.setPageSize(pagePostEntity.getSize());
+		postResponse.setTotalElements(pagePostEntity.getTotalElements());
+		postResponse.setTotalPages(pagePostEntity.getTotalPages());
+		postResponse.setLastPage(pagePostEntity.isLast());
+		
+		return postResponse;
 	}
 
 	@Override
