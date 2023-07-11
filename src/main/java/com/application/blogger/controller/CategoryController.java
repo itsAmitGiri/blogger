@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.application.blogger.dto.ApiResponse;
 import com.application.blogger.dto.CategoryDto;
+import com.application.blogger.response.ApiResponse;
 import com.application.blogger.service.CategoryService;
 import com.application.blogger.service.impl.CategoryServiceImpl;
 

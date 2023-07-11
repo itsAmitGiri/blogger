@@ -5,6 +5,7 @@ import java.util.List;
 import com.application.blogger.dto.PostDto;
 import com.application.blogger.model.CategoryEntity;
 import com.application.blogger.model.UserEntity;
+import com.application.blogger.response.PostResponse;
 
 
 public interface PostService {
@@ -15,7 +16,7 @@ public interface PostService {
 	
 	void deletePost(Integer id);
 	
-	List<PostDto> getAllPosts(Integer pageNumber, Integer pageSize);
+	PostResponse getAllPosts(Integer pageNumber, Integer pageSize);
 	
 	PostDto getPostById(Integer id);
 

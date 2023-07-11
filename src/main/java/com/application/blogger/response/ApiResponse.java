@@ -1,4 +1,4 @@
-package com.application.blogger.dto;
+package com.application.blogger.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
