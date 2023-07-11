@@ -21,6 +21,7 @@ import com.application.blogger.model.PostEntity;
 import com.application.blogger.response.ApiResponse;
 import com.application.blogger.response.PostResponse;
 import com.application.blogger.service.PostService;
+import com.application.blogger.util.AppConstants;
 
 @RestController
 @RequestMapping("/api/post")
@@ -67,10 +68,12 @@ public class PostController {
 	
 	@GetMapping("/posts")
 	public ResponseEntity<PostResponse> getPosts(
-			@RequestParam(value="pageNumber", defaultValue="0", required=false) Integer pageNumber,
-			@RequestParam(value="pageSize", defaultValue="2", required=false) Integer pageSize
+			@RequestParam(value="pageNumber", defaultValue=AppConstants.PAGE_NUMBER, required=false) Integer pageNumber,
+			@RequestParam(value="pageSize", defaultValue=AppConstants.PAGE_SIZE, required=false) Integer pageSize,
+			@RequestParam(value="sortBy", defaultValue=AppConstants.SORT_BY, required=false) String sortBy,
+			@RequestParam(value="sortType", defaultValue=AppConstants.SORT_TYPE, required=false) String sortType
 			){
-		PostResponse posts = this.postService.getAllPosts(pageNumber, pageSize);
+		PostResponse posts = this.postService.getAllPosts(pageNumber, pageSize, sortBy, sortType);
 		return new ResponseEntity<>(posts,HttpStatus.OK);
 	}
 	
@@ -79,6 +82,14 @@ public class PostController {
 		this.postService.deletePost(id);
 		return new ResponseEntity<>(new ApiResponse("Post has been deleted", true), HttpStatus.OK);
 	}
+	
+	@GetMapping("/search/{keyword}")
+	public ResponseEntity<List<PostDto>> searchPostByTitle(@PathVariable String keyword){
+		List<PostDto> searchPosts = this.postService.searchPost(keyword);
+		
+		return new ResponseEntity<>(searchPosts, HttpStatus.OK);
+	}
+	
 }
 
 
