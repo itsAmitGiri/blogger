@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +27,6 @@ import com.application.blogger.service.FileService;
 import com.application.blogger.service.PostService;
 import com.application.blogger.util.AppConstants;
 
-import lombok.Value;
 
 @RestController
 @RequestMapping("/api/post")
@@ -38,7 +38,7 @@ public class PostController {
 	@Autowired
 	private FileService fileServie;
 	
-	//@Value("${project.image}")
+	@Value("${project.image.path}")
 	private String path;
 	
 	@PostMapping("/user/{userId}/category/{categoryId}/posts")
@@ -101,7 +101,7 @@ public class PostController {
 		return new ResponseEntity<>(searchPosts, HttpStatus.OK);
 	}
 	
-	@PostMapping("/image/upload/{id}")
+	@PutMapping("/image/upload/{id}")
 	public ResponseEntity<PostDto> uploadPostImage(
 			@RequestParam("image") MultipartFile image,
 			@PathVariable Integer id)throws IOException{
