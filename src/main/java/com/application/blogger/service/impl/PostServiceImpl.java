@@ -73,7 +73,7 @@ public class PostServiceImpl implements PostService {
 				.orElseThrow(() -> new ResourceNotFoundException("Post","id",id));
 		postEntity.setPostTitle(postDto.getPostTitle());
 		postEntity.setContent(postDto.getContent());
-		postEntity.setImageName("default.png");
+		postEntity.setImageName(postDto.getImageName());
 		postEntity.setAddedDate(new Date());
 		//postEntity.setCategory(categoryEntity);
 		//postEntity.setUser(userEntity);
