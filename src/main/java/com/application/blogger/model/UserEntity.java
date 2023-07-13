@@ -1,6 +1,7 @@
 package com.application.blogger.model;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -41,4 +42,29 @@ public class UserEntity {
 	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
 	private List<PostEntity> posts = new ArrayList<>();
 	
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL)
+	private List<CommentEntity> comment = new ArrayList<>();
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
