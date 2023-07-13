@@ -1,8 +1,13 @@
 package com.application.blogger.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.application.blogger.model.CategoryEntity;
+import com.application.blogger.model.CommentEntity;
 import com.application.blogger.model.UserEntity;
 
 import jakarta.persistence.Column;
@@ -29,6 +34,8 @@ public class PostDto {
 	private CategoryDto category;
 	
 	private UserDto user;
+	
+	private Set<CommentDto> comment = new HashSet<>();
 	
 	
 }
