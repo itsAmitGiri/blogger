@@ -56,7 +56,7 @@ public class UserEntity implements UserDetails {
 	
 	@ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(
-			name="user-role", joinColumns=@JoinColumn(name="user", referencedColumnName="userId"),
+			name="user_role", joinColumns=@JoinColumn(name="user", referencedColumnName="userId"),
 			inverseJoinColumns = @JoinColumn(name="role", referencedColumnName="roleId")
 			)
 	private List<RoleEntity> roles = new ArrayList<>();
@@ -64,7 +64,7 @@ public class UserEntity implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		Collection<? extends GrantedAuthority> grantedAuthority;
+		List<SimpleGrantedAuthority> grantedAuthority;
 		grantedAuthority = this.roles.stream()
 				.map((role) -> new SimpleGrantedAuthority(role.getRoleName()))
 				.collect(Collectors.toList());
