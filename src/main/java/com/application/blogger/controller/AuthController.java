@@ -23,8 +23,8 @@ public class AuthController {
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
-	@Autowired
-	private AuthenticationManager authenticationManager; 
+	//@Autowired
+	//private AuthenticationManager authenticationManager; 
 	
 //	@PostMapping("/login")
 //	public ResponseEntity<JwtAuthResponse> createToken(
