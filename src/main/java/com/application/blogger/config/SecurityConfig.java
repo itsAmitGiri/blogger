@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @EnableWebSecurity
 public class SecurityConfig{
 	
+	private CustomUserDetailService customUserDetailService;
 	
 	@Autowired
 	private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -47,9 +48,9 @@ public class SecurityConfig{
 		http
 			.csrf(csrf -> csrf.disable())
 			.cors(cors -> cors.disable())
-			.authorizeHttpRequests(auth -> auth.requestMatchers("/home/**")
+			.authorizeHttpRequests(auth -> auth.requestMatchers("/api/**")
 					.authenticated()
-					.requestMatchers("/auth/login")
+					.requestMatchers("/api/v1/auth")
 					.permitAll().anyRequest().authenticated())
 			.exceptionHandling(ex ->
 					ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)	)
@@ -64,22 +65,31 @@ public class SecurityConfig{
 		
 	}
 	
-	@Bean
-	public UserDetailsService userDetailsService() {
-		
-		UserDetails userDetails = User.builder().username("amit").password(passwordEncode().encode("1234")).roles("ADMIN").build();
-		
-		return new InMemoryUserDetailsManager(userDetails);
-		
-	}
+//	@Bean
+//	public UserDetailsService userDetailsService() {
+//		
+//		UserDetails userDetails = User.builder().username("amit").password(passwordEncode().encode("1234")).roles("ADMIN").build();
+//		
+//		return new InMemoryUserDetailsManager(userDetails);
+//		
+//	}
 	
 	@Bean
 	public PasswordEncoder passwordEncode() {
 		return new BCryptPasswordEncoder();
 	}
 	
+//	@Bean
+//	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception{
+//		
+//		return builder.getAuthenticationManager();
+//	}
+	
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception{
+	public AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth,AuthenticationConfiguration builder) throws Exception{
+		
+		auth.userDetailsService(this.customUserDetailService).passwordEncoder(passwordEncode());
+		
 		return builder.getAuthenticationManager();
 	}
 
