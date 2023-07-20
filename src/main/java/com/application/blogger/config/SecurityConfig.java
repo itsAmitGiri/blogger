@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @EnableWebSecurity
 public class SecurityConfig{
 	
+	@Autowired
 	private CustomUserDetailService customUserDetailService;
 	
 	@Autowired
@@ -50,7 +52,7 @@ public class SecurityConfig{
 			.cors(cors -> cors.disable())
 			.authorizeHttpRequests(auth -> auth.requestMatchers("/api/**")
 					.authenticated()
-					.requestMatchers("/api/v1/auth")
+					.requestMatchers("/api/v1/auth/**")
 					.permitAll().anyRequest().authenticated())
 			.exceptionHandling(ex ->
 					ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)	)
@@ -74,24 +76,36 @@ public class SecurityConfig{
 //		
 //	}
 	
+//	public UserDetailsService userDetailsService() {
+//		
+//	}
+	
 	@Bean
 	public PasswordEncoder passwordEncode() {
 		return new BCryptPasswordEncoder();
 	}
 	
-//	@Bean
-//	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception{
-//		
-//		return builder.getAuthenticationManager();
-//	}
-	
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth,AuthenticationConfiguration builder) throws Exception{
-		
-		auth.userDetailsService(this.customUserDetailService).passwordEncoder(passwordEncode());
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception{
 		
 		return builder.getAuthenticationManager();
 	}
+	
+	@Bean
+	public DaoAuthenticationProvider daoAuthenticationProvide() {
+		DaoAuthenticationProvider daoAuthProvider = new DaoAuthenticationProvider();
+		daoAuthProvider.setUserDetailsService(customUserDetailService);
+		daoAuthProvider.setPasswordEncoder(passwordEncode());
+		return daoAuthProvider;
+	}
+	
+//	@Bean
+//	public AuthenticationManager authenticationManager(AuthenticationManagerBuilder auth,AuthenticationConfiguration builder) throws Exception{
+//		
+//		//auth.userDetailsService(this.customUserDetailService).passwordEncoder(passwordEncode());
+//		
+//		return builder.getAuthenticationManager();
+//	}
 
 }
 
